@@ -14,52 +14,56 @@ public class UserThread extends Thread {
 	private ChatServer server;
 	private PrintWriter writer;
 	private String userName;
+	String targetUserName = "refresh";
+	boolean done = false;
+	private int currentSize;
+	private String clientMessage;
 
-	public UserThread(Socket socket, ChatServer server) {
+	public UserThread(Socket socket, ChatServer server, int currentSize) {
 		this.socket = socket;
 		this.server = server;
+		this.currentSize = currentSize;
 	}
 
 	public void run() {
 		try {
+			
 			InputStream input = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
 			OutputStream output = socket.getOutputStream();
 			writer = new PrintWriter(output, true);
 
+			// Get userName
 			String userName = reader.readLine();
 			this.userName = userName;
 			server.addUserName(userName);
 			
-			printUsers();
+			// Refresh list of online users
+			while(targetUserName.equals("refresh")) {
+				if(ChatServer.size > currentSize) {
+					currentSize +=1;
+					writer.println("\nOnline users: " + server.getUserNames());
+					targetUserName = reader.readLine();
+				}
+			}
 			
-			
-			//Perro
-			String targetUserName = reader.readLine();
-			//server.addTargetUserName(targetUserName);
-			server.addChatPair(userName, targetUserName);
-
-			String serverMessage = "New user connected: " + userName;
-			server.broadcast(serverMessage, this);
-
-			String clientMessage;
-			
-			System.out.println("User: " + userName + " Target: " + targetUserName);
-			
+			// Request to chat
+			server.directMessage("\nHi " + targetUserName + ", " + userName + " would like to chat."
+					+ "\nType \"" + userName + "\" to accept.", targetUserName);
+			 
+			// Chat
 			do {
-				clientMessage = reader.readLine();
-				//serverMessage = "[" + userName + "]: " + clientMessage;
-				// Send message here
+				clientMessage = "[" + userName + "]: " + reader.readLine();
 				server.directMessage(clientMessage, targetUserName);
 
 			} while (!clientMessage.equals("bye"));
 
 			server.removeUser(userName, this);
 			socket.close();
-
-			serverMessage = userName + " has quitted.";
-			server.broadcast(serverMessage, this);
+			
+			//System.out.println(targetUserName + " does not want to chat :(");
+			
 
 		} catch (IOException ex) {
 			System.out.println("Error in UserThread: " + ex.getMessage());
@@ -72,9 +76,9 @@ public class UserThread extends Thread {
 	 */
 	void printUsers() {
 		if (server.hasUsers()) {
-			writer.println("Select a user to chat to: " + server.getUserNames());
+			writer.println("Online users: " + server.getUserNames());
 		} else {
-			writer.println("No other users connected. Please wait until another user comes online...");
+			writer.println("No online users. Please wait...");
 		}
 	}
 

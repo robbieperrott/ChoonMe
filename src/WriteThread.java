@@ -9,6 +9,7 @@ import java.net.*;
  * @author www.codejava.net
  */
 public class WriteThread extends Thread {
+	
 	private PrintWriter writer;
 	private Socket socket;
 	private ChatClient client;
@@ -34,12 +35,13 @@ public class WriteThread extends Thread {
 		client.setUserName(userName);
 		writer.println(userName);
 		
-		String targetUserName = console.readLine("\nEnter the username of the person you would like to chat to: ");
+		String targetUserName = console.readLine("\nEnter the name of the user you would like to chat to."
+				+ "\nType \"refresh\" to see if more users are online.");
 		client.setTargetUserName(targetUserName);
 		writer.println(targetUserName);
-
+		
 		String text;
-
+		
 		do {
 			text = console.readLine("[" + userName + "]: ");
 			writer.println(text);

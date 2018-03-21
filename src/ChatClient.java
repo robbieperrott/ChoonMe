@@ -44,11 +44,19 @@ public class ChatClient {
 	void setTargetUserName(String targetUserName) {
 		this.targetUserName = targetUserName;
 	}
+	
+	//void requestTargetUser(targetUserName) {
+		//
+	//}
 	//
 
 	String getUserName() {
 		return this.userName;
 	}
+	
+	//boolean requested() {
+		
+	//}
 
 
 	public static void main(String[] args) {

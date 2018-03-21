@@ -9,10 +9,12 @@ import java.util.*;
  * @author www.codejava.net
  */
 public class ChatServer {
+	
 	private int port;
 	private Set<String> userNames = new HashSet<>();
 	private Set<UserThread> userThreads = new HashSet<>();
 	private HashMap<String, String> chatPairs = new HashMap<>();
+	static int size = 0; // amount of clients on server
 	
 	public ChatServer(int port) {
 		this.port = port;
@@ -27,10 +29,11 @@ public class ChatServer {
 				Socket socket = serverSocket.accept();
 				System.out.println("New user connected");
 
-				UserThread newUser = new UserThread(socket, this);
+				UserThread newUser = new UserThread(socket, this, size);
 				userThreads.add(newUser);
 				newUser.start();
-
+				
+				size +=1;
 			}
 
 		} catch (IOException ex) {
