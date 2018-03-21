@@ -31,8 +31,15 @@ public class UserThread extends Thread {
 			String userName = reader.readLine();
 			this.userName = userName;
 			server.addUserName(userName);
+
+			//Only run this if there is >1 users.
+			if(server.getUserNames().size()==1){
+				//1 User connected, output message to wait
+				writer.println("No other users connected. Please wait until another user comes online...");
+			}else{
+				printUsers();
+			}
 			
-			printUsers();
 			
 			
 			//Perro

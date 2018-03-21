@@ -4,8 +4,6 @@ import java.io.*;
 /**
  * This is the chat client program.
  * Type 'bye' to terminate the program.
- *
- * @author www.codejava.net
  */
 public class ChatClient {
 	

@@ -6,7 +6,7 @@ import java.net.*;
  * to the server.
  * It runs in an infinite loop until the user types 'bye' to quit.
  *
- * @author www.codejava.net
+ * 
  */
 public class WriteThread extends Thread {
 	private PrintWriter writer;
@@ -33,7 +33,6 @@ public class WriteThread extends Thread {
 		String userName = console.readLine("\nEnter your username: ");
 		client.setUserName(userName);
 		writer.println(userName);
-		
 		String targetUserName = console.readLine("\nEnter the username of the person you would like to chat to: ");
 		client.setTargetUserName(targetUserName);
 		writer.println(targetUserName);
